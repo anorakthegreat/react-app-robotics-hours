@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/react-app-robotics-hours/static/css/main.182e012b.css",
+    "main.js": "/react-app-robotics-hours/static/js/main.c5479a83.js",
+    "index.html": "/react-app-robotics-hours/index.html",
+    "main.182e012b.css.map": "/react-app-robotics-hours/static/css/main.182e012b.css.map",
+    "main.c5479a83.js.map": "/react-app-robotics-hours/static/js/main.c5479a83.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.182e012b.css",
+    "static/js/main.c5479a83.js"
+  ]
+}
