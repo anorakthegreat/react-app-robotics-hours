@@ -113,6 +113,25 @@ form .form-inner input[type = "submit"]:hover, .welcome button:hover {
 
 }
 
+form .form-inner input[type = "button"]{
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-image: linear-gradient(to right, #FFCE00 50%, #FFCE00 50%, #FE4880);
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #FFF;
+  font-weight: 700;
+  cursor: pointer;
+
+}
+
+form .form-inner input[type = "button"]:hover{
+  background-position: 100% 0%;
+
+}
+
 .welcome{
   width: 100%;
   max-width: 480px;
@@ -180,6 +199,118 @@ form .form-inner input[type = "submit"]:hover, .welcome button:hover {
 }
 
 .admin button:hover {
+  background-position: 100% 0%;
+
+}
+
+.form-inner button {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-image: linear-gradient(to right, #FFCE00 50%, #FFCE00 50%, #FE4880);
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #FFF;
+  font-weight: 700;
+  cursor: pointer;
+
+}
+
+.form-inner button:hover {
+  background-position: 100% 0%;
+
+}
+
+/* new thing */
+
+.admin-inner{
+  position: relative;
+  display: block;
+  background-color: #FFF;
+  padding: 200px;
+  z-index: 2;
+
+}
+
+.admin-inner h2{
+  color: #888;
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 30px;
+
+}
+
+.admin-inner .admin-group{
+  display: block;
+  width: 300px;
+  margin-bottom: 15px;
+
+}
+
+.admin-inner .admin-group:label{
+  display: block;
+  color: #666;
+  font-size: 12px;
+  margin-bottom: 5px;
+  transition: 0.4s;
+  
+}
+
+.admin-inner .admin-group:focus-within label{
+  color: #FE4880; 
+} 
+
+.admin-inner .admin-group input{
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #F8F8F8;
+  border-radius: 8px;
+  transition: 0.4s;
+  
+  
+} 
+.admin-inner .admin-group input:focus{
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+  
+  
+} 
+
+.admin-inner input[type = "submit"]{
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-image: linear-gradient(to right, #FFCE00 50%, #FFCE00 50%, #FE4880);
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #FFF;
+  font-weight: 700;
+  cursor: pointer;
+
+}
+
+.admin-inner input[type = "submit"]:hover{
+  background-position: 100% 0%;
+
+}
+
+.admin-inner input[type = "button"]{
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-image: linear-gradient(to right, #FFCE00 50%, #FFCE00 50%, #FE4880);
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #FFF;
+  font-weight: 700;
+  cursor: pointer;
+
+}
+
+.admin-inner input[type = "button"]:hover{
   background-position: 100% 0%;
 
 }

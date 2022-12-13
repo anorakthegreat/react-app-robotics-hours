@@ -1,7 +1,8 @@
+import userEvent from '@testing-library/user-event';
 import React, {useState} from 'react'
 
 
-function LoginForm( {Login, error, loading}) {
+function LoginForm( {Login, error, loading, setError, setUser, user, changeUserPw}) {
     const [details, setDetails] = useState({name: "", password: ""})
 
     const submitHandler = e =>{
@@ -28,10 +29,24 @@ function LoginForm( {Login, error, loading}) {
             <div className='form-group'>
                 <label htmlFor='password'> Password: </label>
                 <input type="text" name = "Password" id = "Password" onChange= {e => setDetails({...details, password: e.target.value})} value={details.password}/>
-            </div>   
+            </div>
+            
+            <button type="button" onClick={changeUserPw}> Forgot Password?</button>
+            {/* <input type="button" onClick={() => setError("NAHHH")}value="Submit" /> */}
 
+            <h2></h2>
             <input type="submit" value = "LOGIN" /> 
+
+            <h2></h2>
+
+
         </div>
+
+        {/* <div className = "forminnverv2">
+            <h2> YOOOOOOOOOOOOOOOO </h2>
+        </div> */}
+       
+
     </form>
   )
 }
