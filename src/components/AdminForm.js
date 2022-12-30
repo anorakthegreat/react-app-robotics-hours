@@ -16,14 +16,14 @@ const [details, setDetails] = useState({name: ""})
 
     return (
         <div className = "admin"> 
-            <h2>Admin Panel</h2>
-            <h2 />
-            <h2>{totalTime}</h2>
+            <h1>Admin Panel</h1>
             <h2 />
             <h2>{status}</h2>
             <h2 />
+            <h2>{totalTime}</h2>
+            <h2 />
             <label htmlFor='name'> Name: </label>
-            <input type="text" name = "Name" id = "name"/>
+            <input type="text" name="Name" id="name" placeholder="Aidan S"/>
             <h2 />
             <button onClick={() => adminRequestName(document.getElementById("name").value)}> Log In/Out</button>
             <h2 />

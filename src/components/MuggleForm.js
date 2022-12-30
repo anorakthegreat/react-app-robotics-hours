@@ -6,9 +6,8 @@ function MuggleForm( {Logout, totalTime, getTotalTime, user, changeUserPw}) {
 const [details, setDetails] = useState({name: ""})
 
     return (
-        <div className = "admin"> 
-            <h2>Welcome, <span>{user.name}</span></h2>
-            <h2></h2>
+        <div className = "welcome"> 
+            <h1>Welcome, <span>{user.name}</span></h1>
             <h2>{totalTime}</h2>
             <button onClick={getTotalTime}>Get Total Time</button>
             <h2 />

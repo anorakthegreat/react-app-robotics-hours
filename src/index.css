@@ -139,6 +139,10 @@ form .form-inner input[type = "button"]:hover{
   padding: 50px 30px;
 }
 
+.welcome h1{
+  margin-bottom: 30px;
+}
+
 .welcome h2{
   color: #888;
   font-size: 28px;
@@ -160,6 +164,10 @@ form .form-inner input[type = "button"]:hover{
   max-width: 480px;
   background-color: #fff;
   padding: 50px 30px;
+}
+
+.admin h1{
+  margin-bottom: 30px;
 }
 
 .admin h2{

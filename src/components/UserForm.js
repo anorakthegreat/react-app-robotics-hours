@@ -5,13 +5,13 @@ function UserForm( {Logout, requestName, getTotalTime, signedIn, totalTime, user
 
     return (
         <div className='welcome'>
-                <h2>Welcome, <span>{user.name}</span></h2>
+                <h1>Welcome, <span>{user.name}</span></h1>
                 <h2>{signedIn}</h2>
                 <h2>{totalTime}</h2>
+                <button onClick={requestName}> Log In/Out</button>
+                <h2></h2>
                 <button onClick={getTotalTime}>Get Total Time</button>
                 <h2 />
-                <button onClick={requestName}> Log in/Out</button>
-                <h2></h2>
                 <button type="button" onClick={changeUserPw}> Change Password</button>
                 <h2></h2>
                 <button onClick={Logout}> Sign out</button>

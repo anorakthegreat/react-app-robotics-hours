@@ -62,9 +62,10 @@ function App() {
   }
 
   const requestName = () => {
-    setSignIn("Signing in...")
-    Axios.post(API_ENDPOINT + "?token=" + user.token + "&type=logname&name=" + user.name).then(() => {
-      setSignIn("You've signed in!")
+    setSignIn("Logging activity...")
+    Axios.post(API_ENDPOINT + "?token=" + user.token + "&type=logname&name=" + user.name).then((response) =>{
+      if (response.data["status"] === null) setSignIn("Error: " + response.data["error"])
+      else setSignIn("You've logged " + response.data["status"] + "!")
     })
   }
 
@@ -75,13 +76,18 @@ function App() {
   }
 
   const adminRequestName = name => {
+    if (name === "") name = user.name;
+
     setStatus("Loading...")
     Axios.post(API_ENDPOINT + "?token=" + user.token + "&type=logname&name=" + name).then((response) => {
-      setStatus("You've signed " + name + " " + response.data["status"] + "!")
+      if (response.data["status"] === undefined) setStatus("Error: " + response.data["error"])
+      else setStatus("You've logged " + name + " " + response.data["status"] + "!")
     })
   }
 
   const getTotalTimeAdmin = name => {
+    if (name === "") name = user.name;
+    
     setTime("Loading....")
 
     Axios.get(API_ENDPOINT + "?token=" + user.token + "&type=totalTime&name=" + name).then((response) =>{
