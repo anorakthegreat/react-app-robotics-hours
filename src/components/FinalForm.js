@@ -3,28 +3,25 @@ import AdminForm from './AdminForm'
 import MuggleForm from './MuggleForm'
 import UserForm from './UserForm'
 
-function FinalForm( {Logout, requestName, getTotalTime, signedIn, totalTime, user, adminRequestName, status, getTotalTimeAdmin}) {
+function FinalForm( {Logout, requestName, getTotalTime, signedIn, totalTime, user, adminRequestName, status, getTotalTimeAdmin, changeUserPw}) {
 
-    if(user.level == "user"){
+    if(user.level === "user"){
         return(          
-            <UserForm Logout = {Logout} requestName = {requestName} getTotalTime = {getTotalTime} signedIn = {signedIn} totalTime = {totalTime} user = {user} adminRequestName = {adminRequestName}/>
+            <UserForm Logout = {Logout} requestName = {requestName} getTotalTime = {getTotalTime} signedIn = {signedIn} totalTime = {totalTime} user = {user} adminRequestName = {adminRequestName} changeUserPw={changeUserPw}/>
         )
     }
 
-    if(user.level == "admin"){
+    if(user.level === "admin"){
         return(
-            <AdminForm Logout={Logout} adminRequestName={adminRequestName} status = {status} totalTime = {totalTime} getTotalTimeAdmin={getTotalTimeAdmin}/>
+            <AdminForm Logout={Logout} adminRequestName={adminRequestName} status = {status} totalTime = {totalTime} getTotalTimeAdmin={getTotalTimeAdmin} changeUserPw={changeUserPw}/>
         )
     }
 
-    if(user.level == "muggle"){
+    if(user.level === "limited"){
         return(
-            <MuggleForm Logout={Logout} totalTime={totalTime} getTotalTime={getTotalTime} user = {user}/>
+            <MuggleForm Logout={Logout} totalTime={totalTime} getTotalTime={getTotalTime} user = {user} changeUserPw={changeUserPw}/>
         )
     }
-
-
-
 }
 
 export default FinalForm

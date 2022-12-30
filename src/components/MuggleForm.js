@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Axios from 'axios'
 
-function MuggleForm( {Logout, totalTime, getTotalTime, user}) {
+function MuggleForm( {Logout, totalTime, getTotalTime, user, changeUserPw}) {
 
 const [details, setDetails] = useState({name: ""})
 
@@ -10,8 +10,11 @@ const [details, setDetails] = useState({name: ""})
             <h2>Welcome, <span>{user.name}</span></h2>
             <h2></h2>
             <h2>{totalTime}</h2>
+            <button onClick={getTotalTime}>Get Total Time</button>
+            <h2 />
+            <button type="button" onClick={changeUserPw}>Change Password</button>
             <h2></h2>
-            <button onClick={getTotalTime}> Total Time</button>
+            <button onClick={Logout}>Sign out</button>
         </div>
     )
 

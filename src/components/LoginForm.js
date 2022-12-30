@@ -17,7 +17,7 @@ function LoginForm( {Login, error, loading, setError, setUser, user, changeUserP
         <div className = "form-inner">
             <h2>Login</h2>
             {/* <div className=' error'><h4>{error}</h4></div>  */}
-            { (error != "") ? (<div className=' error'><h4>{error}</h4></div> ) : "" }
+            { (error !== "") ? (<div className=' error'><h4>{error}</h4></div> ) : "" }
             <div className='form-group'>
                 <label htmlFor='name'> Name: </label>
                 <input type="text" name = "Name" id = "name" onChange= {e => setDetails({...details, name: e.target.value})} value={details.name}/>
@@ -31,7 +31,7 @@ function LoginForm( {Login, error, loading, setError, setUser, user, changeUserP
                 <input type="text" name = "Password" id = "Password" onChange= {e => setDetails({...details, password: e.target.value})} value={details.password}/>
             </div>
             
-            <button type="button" onClick={changeUserPw}> Forgot Password?</button>
+            {/* <button type="button" onClick={changeUserPw}> Forgot Password?</button> */}
             {/* <input type="button" onClick={() => setError("NAHHH")}value="Submit" /> */}
 
             <h2></h2>

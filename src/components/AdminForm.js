@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Axios from 'axios'
 
-function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin}) {
+function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin, changeUserPw}) {
 
 const [details, setDetails] = useState({name: ""})
 
@@ -17,19 +17,21 @@ const [details, setDetails] = useState({name: ""})
     return (
         <div className = "admin"> 
             <h2>Admin Panel</h2>
-            <h2></h2>
+            <h2 />
             <h2>{totalTime}</h2>
-            <h2></h2>
+            <h2 />
             <h2>{status}</h2>
-            <h2></h2>
+            <h2 />
             <label htmlFor='name'> Name: </label>
             <input type="text" name = "Name" id = "name"/>
-            <h2></h2>
-            <button onClick={Logout}> Logout</button>
-            <h2></h2>
+            <h2 />
             <button onClick={() => adminRequestName(document.getElementById("name").value)}> Log In/Out</button>
-            <h2></h2>
+            <h2 />
             <button onClick={() => getTotalTimeAdmin(document.getElementById("name").value)}> Total Time</button>
+            <h2 />
+            <button type="button" onClick={changeUserPw}> Change Password</button>
+            <h2 />
+            <button onClick={Logout}> Sign out</button>
         </div>
     )
 

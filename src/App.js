@@ -1,42 +1,42 @@
 import './App.css';
 import React, {useState} from 'react'
-import LoginForm from './components/LoginForm';
-import UserForm from './components/UserForm';
-
 import Axios from 'axios'
+
+import LoginForm from './components/LoginForm';
 import FinalForm from './components/FinalForm';
 import ForgotPassword from './components/ForgotPassword';
 
+import { API_ENDPOINT } from './API';
+
 function App() {
-  const verified = false;
-  const sheetId = "AKfycbyFtFKKr1HPIoii50lKM_uNQCkISTchTHGvpeHFQzY7-uWhhqGj51cefe9onIE1HgSG"
-  const[user, setUser] = useState({name:"", password:"", level:""})
-  const[error, setError] = useState("");
-  const[signedIn, setSignIn] = useState("");
-  const[totalTime, setTime] = useState("");
-  const[currUser, setCurrUser] = useState(user.name)
-  const[loading, setLoading] = useState("")
-  const[status, setStatus] = useState("")
-  const[forgot, setForgot] = useState("")
+  const [verified, setVerified] = useState(false);
+  const [user, setUser] = useState({name:"", token:"", level:""})
+  const [error, setError] = useState("");
+  const [signedIn, setSignIn] = useState("");
+  const [totalTime, setTime] = useState("");
+  const [currUser, setCurrUser] = useState(user.name)
+  const [loading, setLoading] = useState("")
+  const [status, setStatus] = useState("")
+  const [forgot, setForgot] = useState("")
 
   const Login = details => {  
     setError("Loading...")
 
-    Axios.get("https://script.google.com/macros/s/" + sheetId + "/exec?token=52fa80662e64c128f8389c9ea6c73d4c&type=namePresent&name=" + details.name).then((response) => {
+    Axios.get(API_ENDPOINT + "?type=signin&name=" + details.name + "&pw=" + details.password).then((response) => {
 
       console.log(response)
-      if(response.data != false){
+      if(response.data !== false){
         console.log(response.data)
 
 
-        if(response.data["name"] == details.name && response.data["password"] == details.password){
+        if(response.data["name"] === details.name){
           setUser({
-            name: details.name,
-            password: details.password,
+            name: response.data["name"],
+            token: response.data["token"],
             level: response.data["level"]
           })
 
-          verified = true;
+          setVerified(true)
         }
 
         if(!verified){
@@ -49,66 +49,46 @@ function App() {
   }
 
   const Logout = () => {
-    setSignIn("")
-    setTime("")
-    setError("")
-    setStatus("")
-    setForgot("")
-    setUser({name: "", password : ""})
+    Axios.get(API_ENDPOINT + "?token=" + user.token + "&type=signout&name=" + user.name).then((response) => {
+      setSignIn("")
+      setTime("")
+      setError("")
+      setStatus("")
+      setForgot("")
+      setUser({name: "", token : "", level: ""})
+    })
     // console.log('helo')
     
   }
 
   const requestName = () => {
-    
-    // setsignIn( {user.name})
-
-    setSignIn("You've signed in!")
-    const currName = user.name
-    Axios.get("https://script.google.com/macros/s/" + sheetId + "/exec?token=52fa80662e64c128f8389c9ea6c73d4c&type=logname&name=" + currName )
+    setSignIn("Signing in...")
+    Axios.post(API_ENDPOINT + "?token=" + user.token + "&type=logname&name=" + user.name).then(() => {
+      setSignIn("You've signed in!")
+    })
   }
 
   const getTotalTime = () => {
     var currName = user.name
-    var completeTime = 0;
-
-    setTime("Loading....")
-
-    Axios.get("https://script.google.com/macros/s/" + sheetId + "/exec?token=52fa80662e64c128f8389c9ea6c73d4c&type=totalTime&name="+currName+"&date=2022-10-29").then((response) =>{
-      
     
-      console.log(response.data["total time"])
-      // completeTime = response.data
-
-      setTime(Math.round(response.data["total time"]) + " minutes")
-      
-      
-
-    })
-    
+    getTotalTimeAdmin(currName);
   }
 
   const adminRequestName = name => {
-    setStatus("Loading")
-    Axios.get("https://script.google.com/macros/s/" + sheetId + "/exec?token=52fa80662e64c128f8389c9ea6c73d4c&type=logname&name="+name)
-    setStatus("You've signed " + name + " in!")
+    setStatus("Loading...")
+    Axios.post(API_ENDPOINT + "?token=" + user.token + "&type=logname&name=" + name).then((response) => {
+      setStatus("You've signed " + name + " " + response.data["status"] + "!")
+    })
   }
 
   const getTotalTimeAdmin = name => {
-    var completeTime = 0;
-
     setTime("Loading....")
 
-    Axios.get("https://script.google.com/macros/s/" + sheetId + "/exec?token=52fa80662e64c128f8389c9ea6c73d4c&type=totalTime&name="+name+"&date=2022-10-29").then((response) =>{
-      
-    
-      console.log(response.data["total time"])
+    Axios.get(API_ENDPOINT + "?token=" + user.token + "&type=totalTime&name=" + name).then((response) =>{
+      console.log(response.data["totalTime"])
       // completeTime = response.data
 
-      setTime(Math.round(response.data["total time"]) + " minutes")
-      
-      
-
+      setTime(Math.round(response.data["totalTime"]*100)/100 + " hours")
     })
 
   }
@@ -133,10 +113,10 @@ function App() {
     // } else {
       // return <FinalForm Logout = {Logout} requestName = {requestName} getTotalTime = {getTotalTime} signedIn = {signedIn} totalTime = {totalTime} user = {user} adminRequestName = {adminRequestName} status = {status} getTotalTimeAdmin = {getTotalTimeAdmin}/> 
     // }
-    if(forgot == "true"){
+    if(forgot === "true"){
       return <ForgotPassword  error = {error} forgotPw = {forgotPw} Logout={Logout} />
-    } else if(user.password != ""){
-      return <FinalForm Logout = {Logout} requestName = {requestName} getTotalTime = {getTotalTime} signedIn = {signedIn} totalTime = {totalTime} user = {user} adminRequestName = {adminRequestName} status = {status} getTotalTimeAdmin = {getTotalTimeAdmin}/> 
+    } else if(user.token !== ""){
+      return <FinalForm Logout = {Logout} requestName = {requestName} getTotalTime = {getTotalTime} signedIn = {signedIn} totalTime = {totalTime} user = {user} adminRequestName = {adminRequestName} status = {status} getTotalTimeAdmin = {getTotalTimeAdmin} changeUserPw={changeUserPw}/> 
     } else {
       return <LoginForm Login = {Login} error = {error} loading = {loading} setError={setError} setUser ={setUser} user = {user} changeUserPw = {changeUserPw}/>
     }
@@ -155,8 +135,8 @@ function App() {
   }
 
   const forgotPw = details =>{
-    Axios.get("https://script.google.com/macros/s/" + sheetId + "/exec?token=52fa80662e64c128f8389c9ea6c73d4c&type=forgotPw&name="+details.name+"&oldPw="+details.oldpw+"&newPw="+details.newpw).then((response) => {
-      if(response.data["success"] == true){
+    Axios.get(API_ENDPOINT + "/exec?token=" + user.token + "&type=changepw&oldpw=" + details.oldpw + "&newpw=" + details.newpw).then((response) => {
+      if(response.data["success"] === true){
         setError("Success! You reset your password")
       } else {
         setError("Details do not match")
