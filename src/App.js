@@ -9,77 +9,68 @@ import ForgotPassword from './components/ForgotPassword';
 import { API_ENDPOINT } from './API';
 
 function App() {
-  const [verified, setVerified] = useState(false);
   const [user, setUser] = useState({name:"", token:"", level:""})
   const [error, setError] = useState("");
   const [signedIn, setSignIn] = useState("");
   const [totalTime, setTime] = useState("");
-  const [currUser, setCurrUser] = useState(user.name)
-  const [loading, setLoading] = useState("")
   const [status, setStatus] = useState("")
-  const [forgot, setForgot] = useState("")
+  const [forgot, setForgot] = useState(false)
+  const [changePasswordSubmitLabel, setChangePasswordSubmitLabel] = useState("SUBMIT")
+  const [showCPWSuccessLabel, setShowCPWSuccessLabel] = useState(false)
+  const [signinLabel, setSigninLabel] = useState("Sign In")
 
   const Login = details => {  
-    setError("Loading...")
+    setSigninLabel("Please Wait...");
 
-    Axios.get(API_ENDPOINT + "?type=signin&name=" + details.name + "&pw=" + details.password).then((response) => {
-
-      console.log(response)
+    apiRequest(Axios.get, {type: "signin", name: details.name, pw: details.password}).then((response) => {
+      setSigninLabel("Sign In")
       if(response.data !== false){
         console.log(response.data)
 
-
         if(response.data["name"] === details.name){
+          setError("")
           setUser({
             name: response.data["name"],
             token: response.data["token"],
             level: response.data["level"]
           })
-
-          setVerified(true)
-        }
-
-        if(!verified){
-          setError("Details do not Match")
+        } else {
+          setError(response.data["error"])
         }
       } else {
-        setError("Details do not Match")
+        setError("API Error")
       }
     })
   }
 
   const Logout = () => {
-    Axios.get(API_ENDPOINT + "?token=" + user.token + "&type=signout&name=" + user.name).then((response) => {
+    apiRequest(Axios.get, {type: "signout", name: user.name}).then((response) => {
       setSignIn("")
       setTime("")
       setError("")
       setStatus("")
-      setForgot("")
+      setForgot(false)
       setUser({name: "", token : "", level: ""})
-    })
-    // console.log('helo')
-    
+    })    
   }
 
   const requestName = () => {
     setSignIn("Logging activity...")
-    Axios.post(API_ENDPOINT + "?token=" + user.token + "&type=logname&name=" + user.name).then((response) =>{
+    apiRequest(Axios.post, {type: "logname", name: user.name}).then((response) =>{
       if (response.data["status"] === null) setSignIn("Error: " + response.data["error"])
       else setSignIn("You've logged " + response.data["status"] + "!")
     })
   }
 
   const getTotalTime = () => {
-    var currName = user.name
-    
-    getTotalTimeAdmin(currName);
+    getTotalTimeAdmin(user.name);
   }
 
   const adminRequestName = name => {
     if (name === "") name = user.name;
 
     setStatus("Loading...")
-    Axios.post(API_ENDPOINT + "?token=" + user.token + "&type=logname&name=" + name).then((response) => {
+    apiRequest(Axios.post, {type: "logname", name: name}).then((response) => {
       if (response.data["status"] === undefined) setStatus("Error: " + response.data["error"])
       else setStatus("You've logged " + name + " " + response.data["status"] + "!")
     })
@@ -87,91 +78,85 @@ function App() {
 
   const getTotalTimeAdmin = name => {
     if (name === "") name = user.name;
-    
+
     setTime("Loading....")
 
-    Axios.get(API_ENDPOINT + "?token=" + user.token + "&type=totalTime&name=" + name).then((response) =>{
+    apiRequest(Axios.get, {type: "totalTime", name: name}).then((response) =>{
       console.log(response.data["totalTime"])
-      // completeTime = response.data
 
       setTime(Math.round(response.data["totalTime"]*100)/100 + " hours")
     })
-
   }
 
   
+  const apiRequest = (http, params) => {
+    let query = "?"
 
+    if (params.type !== "signin") query += "token=" + user.token + "&"
 
-
-  const renderSwitch = pw =>{
-    // if(pw != ""){
-    //   return <FinalForm Logout = {Logout} requestName = {requestName} getTotalTime = {getTotalTime} signedIn = {signedIn} totalTime = {totalTime} user = {user} adminRequestName = {adminRequestName} status = {status} getTotalTimeAdmin = {getTotalTimeAdmin}/> 
-    // }else if (pw == "forgot"){
-      // return <ForgotPassword  error = {error} forgotPw = {forgotPw} Logout={Logout} />
-    // }else{
-    //   return <LoginForm Login = {Login} error = {error} loading = {loading} setError={setError} setUser ={setUser} user = {user} changeUserPw = {changeUserPw}/>
-    // }
-
-    // if(pw != "forgot"){
-      // return <LoginForm Login = {Login} error = {error} loading = {loading} setError={setError} setUser ={setUser} user = {user} changeUserPw = {changeUserPw}/>
-    // } else if(pw == "forgot"){
-    //   return <ForgotPassword  error = {error} forgotPw = {forgotPw} Logout={Logout}/>
-    // } else {
-      // return <FinalForm Logout = {Logout} requestName = {requestName} getTotalTime = {getTotalTime} signedIn = {signedIn} totalTime = {totalTime} user = {user} adminRequestName = {adminRequestName} status = {status} getTotalTimeAdmin = {getTotalTimeAdmin}/> 
-    // }
-    if(forgot === "true"){
-      return <ForgotPassword  error = {error} forgotPw = {forgotPw} Logout={Logout} />
-    } else if(user.token !== ""){
-      return <FinalForm Logout = {Logout} requestName = {requestName} getTotalTime = {getTotalTime} signedIn = {signedIn} totalTime = {totalTime} user = {user} adminRequestName = {adminRequestName} status = {status} getTotalTimeAdmin = {getTotalTimeAdmin} changeUserPw={changeUserPw}/> 
-    } else {
-      return <LoginForm Login = {Login} error = {error} loading = {loading} setError={setError} setUser ={setUser} user = {user} changeUserPw = {changeUserPw}/>
+    if (Object.keys(params).length >= 1) {
+      for (const [key, value] of Object.entries(params)) {
+        query += key + "=" + value + "&";
+      }
+      query = query.substring(0, query.length - 1);
     }
 
-  }
-
-  const changeUserPw = () =>{
-    // setUser({password:"forgot"})
-    // console.log(user.password)
-
-    setForgot("true")
-
-    // if(user.password == "forgot"){
-    //   console.log("equal deez nuts")
-    // }
+    return http(API_ENDPOINT + query)
   }
 
   const forgotPw = details =>{
-    Axios.get(API_ENDPOINT + "/exec?token=" + user.token + "&type=changepw&oldpw=" + details.oldpw + "&newpw=" + details.newpw).then((response) => {
-      if(response.data["success"] === true){
-        setError("Success! You reset your password")
+    apiRequest(Axios.post, {type: "changepw", oldpw: details.oldpw, newpw: details.newpw}).then((response) => {
+      if(response.data["result"] === "success"){
+        setError("")
+        setShowCPWSuccessLabel(true)
+        setForgot(false)
+        setChangePasswordSubmitLabel("SUBMIT")
       } else {
-        setError("Details do not match")
+        setChangePasswordSubmitLabel("SUBMIT")
+        setError(response.data["error"])
       }
     })
 
     console.log("Submitted")
-
-    // console.log(details.name)
-    // console.log(details.oldpw)
-    // console.log(details.newpw)
-    
+  }
+  
+  const renderSwitch = (token) =>{
+    if(forgot){
+      return <ForgotPassword 
+          error={error} 
+          setError={setError}
+          forgotPw={forgotPw}
+          back={() => setForgot(false)}
+          submitLabel={changePasswordSubmitLabel}
+          setSubmitLabel={setChangePasswordSubmitLabel}
+        />
+    } else if(token !== ""){
+      return <FinalForm 
+          Logout={Logout} 
+          requestName={requestName} 
+          getTotalTime={getTotalTime} 
+          signedIn={signedIn} 
+          totalTime={totalTime} 
+          user={user} 
+          label={showCPWSuccessLabel}
+          adminRequestName={adminRequestName} 
+          status={status} 
+          getTotalTimeAdmin={getTotalTimeAdmin} 
+          changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
+        /> 
+    } else {
+      return <LoginForm 
+          Login={Login} 
+          error={error}
+          signinLabel={signinLabel}
+        />
+    }
   }
 
   return (
     <div className="App">
-      {/* {(user.password != "")  ?  (
-          <FinalForm Logout = {Logout} requestName = {requestName} getTotalTime = {getTotalTime} signedIn = {signedIn} totalTime = {totalTime} user = {user} adminRequestName = {adminRequestName} status = {status} getTotalTimeAdmin = {getTotalTimeAdmin}/>
-      ) :(
-        <LoginForm Login = {Login} error = {error} loading = {loading} setError={setError} setUser ={setUser} user = {user}/>
-      )} */}
-
-      {renderSwitch(user.password)}
-
-      {/* <ForgotPassword  error = {error} forgotPw = {forgotPw} Logout={Logout} /> */}
-
-      
+      {renderSwitch(user.token)}      
     </div>
-
   );
 }
 

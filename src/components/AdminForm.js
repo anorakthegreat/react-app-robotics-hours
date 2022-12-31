@@ -1,9 +1,10 @@
 import React, {useState} from 'react'
 import Axios from 'axios'
 
-function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin, changeUserPw}) {
+function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin, changeUserPw, label}) {
 
 const [details, setDetails] = useState({name: ""})
+const [signoutLabel, setSignoutLabel] = useState("Sign Out")
 
     // const adminRequestName = name => {
     //     // setStatus("Loading...")
@@ -15,23 +16,30 @@ const [details, setDetails] = useState({name: ""})
 
 
     return (
-        <div className = "admin"> 
-            <h1>Admin Panel</h1>
-            <h2 />
-            <h2>{status}</h2>
-            <h2 />
-            <h2>{totalTime}</h2>
-            <h2 />
-            <label htmlFor='name'> Name: </label>
-            <input type="text" name="Name" id="name" placeholder="Aidan S"/>
-            <h2 />
-            <button onClick={() => adminRequestName(document.getElementById("name").value)}> Log In/Out</button>
-            <h2 />
-            <button onClick={() => getTotalTimeAdmin(document.getElementById("name").value)}> Total Time</button>
-            <h2 />
-            <button type="button" onClick={changeUserPw}> Change Password</button>
-            <h2 />
-            <button onClick={Logout}> Sign out</button>
+        <div className="gradient">
+            <div className = "admin gradient-inner"> 
+                <h1>Admin Panel</h1>
+                <h2 />
+                <h2>{status}</h2>
+                <h2 />
+                <h2>{totalTime}</h2>
+                <h2 />
+                <input type="text" name="Name" id="name" placeholder="Aidan S"/>
+                <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
+                    <button style={{flex:1}} onClick={() => adminRequestName(document.getElementById("name").value)}>Log Time In/Out</button>
+                    <span>&nbsp;&nbsp;</span>
+                    <button style={{flex:1}} onClick={() => getTotalTimeAdmin(document.getElementById("name").value)}>Get Total Time</button>
+                </div>
+                <h2 />
+                <div>
+                    <button type="button" onClick={changeUserPw}>Change Password</button>
+                    <span style={{color:"gray"}}>&nbsp;&nbsp;&nbsp;{label ? "Success!" : ""}</span>
+                </div>
+                <h2 />
+                <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
+                    <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); Logout();}}>{signoutLabel}</button>
+                </div>
+            </div>
         </div>
     )
 
