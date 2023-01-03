@@ -45,13 +45,17 @@ function App() {
 
   const Logout = () => {
     apiRequest(Axios.get, {type: "signout", name: user.name}).then((response) => {
-      setSignIn("")
-      setTime("")
-      setError("")
-      setStatus("")
-      setForgot(false)
-      setUser({name: "", token : "", level: ""})
+      signOut();
     })    
+  }
+
+  const signOut = () => {
+    setSignIn("")
+    setTime("")
+    setError("")
+    setStatus("")
+    setForgot(false)
+    setUser({name: "", token : "", level: ""})
   }
 
   const requestName = () => {
@@ -101,7 +105,12 @@ function App() {
       query = query.substring(0, query.length - 1);
     }
 
-    return http(API_ENDPOINT + query)
+    return http(API_ENDPOINT + query).then((response) => {
+      if (response.data["error"] == "Not Authorized") {
+        signOut();
+      }
+      return response;
+    })
   }
 
   const forgotPw = details =>{
