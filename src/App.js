@@ -125,7 +125,7 @@ function App() {
     apiRequest(Axios.post, {type: "changepw", oldpw: old, newpw: details.newpw}).then((response) => {
       if(response.data["result"] === "success"){
         setError("")
-        setShowCPWSuccessLabel(true)
+        setShowCPWSuccessLabel(resetPwState.backAllowed)
         setForgot(false)
         setChangePasswordSubmitLabel("SUBMIT")
         setUser({...user, level: response.data["level"]})

@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
 import Axios from 'axios'
+import { userAgent } from 'next/server'
 
-function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin, changeUserPw, label}) {
+function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin, changeUserPw, label, user}) {
 
 const [details, setDetails] = useState({name: ""})
 const [signoutLabel, setSignoutLabel] = useState("Sign Out")
@@ -24,7 +25,7 @@ const [signoutLabel, setSignoutLabel] = useState("Sign Out")
                 <h2 />
                 <h2>{totalTime}</h2>
                 <h2 />
-                <input type="text" name="Name" id="name" placeholder="Aidan S"/>
+                <input type="text" name="Name" id="name" placeholder={user.name} className="textInput"/>
                 <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
                     <button style={{flex:1}} onClick={() => adminRequestName(document.getElementById("name").value)}>Log Time In/Out</button>
                     <span>&nbsp;&nbsp;</span>

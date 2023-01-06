@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import AdminForm from './AdminForm'
-import ForgotPassword from './ForgotPassword'
 import MuggleForm from './MuggleForm'
 import UserForm from './UserForm'
 
@@ -14,7 +13,7 @@ function FinalForm( {Logout, requestName, getTotalTime, signedIn, totalTime, use
 
     if(user.level === "admin"){
         return(
-            <AdminForm Logout={Logout} adminRequestName={adminRequestName} status = {status} totalTime = {totalTime} getTotalTimeAdmin={getTotalTimeAdmin} changeUserPw={changeUserPw} label={label}/>
+            <AdminForm Logout={Logout} adminRequestName={adminRequestName} status = {status} totalTime = {totalTime} getTotalTimeAdmin={getTotalTimeAdmin} changeUserPw={changeUserPw} label={label} user={user}/>
         )
     }
 

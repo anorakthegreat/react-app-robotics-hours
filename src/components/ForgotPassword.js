@@ -35,19 +35,19 @@ function ForgotPassword( {error, setError, forgotPw, back, submitLabel, setSubmi
             <h2 />
             {resetState.old === "" ?
                 <div className='form-group'>
-                    <label htmlFor='oldpw'> Old Password: </label>
-                    <input type="password" name = "oldpw" id = "oldpw" defaultValue={resetState.old} onChange= {e => setDetails({...details, oldpw: e.target.value})} value={details.oldpw}/>
+                    {/* <label htmlFor='oldpw'> Old Password: </label> */}
+                    <input type="password" name = "oldpw" id = "oldpw" placeholder="Old Password" onChange= {e => setDetails({...details, oldpw: e.target.value})} value={details.oldpw}/>
                 </div>
             : <></>}
 
             <div className='form-group'>
-                <label htmlFor='newpw'> New Password: </label>
-                <input type="password" name = "newpw" id = "newpw" onChange= {e => setDetails({...details, newpw: e.target.value})} value={details.newpw}/>
+                {/* <label htmlFor='newpw'> New Password: </label> */}
+                <input type="password" name = "newpw" id = "newpw" placeholder="New Password" onChange= {e => setDetails({...details, newpw: e.target.value})} value={details.newpw}/>
             </div>
             
             <div className='form-group'>
-                <label htmlFor='confpw'> Confirm New Password: </label>
-                <input type="password" name = "confpw" id = "confpw" onChange= {e => setDetails({...details, confpw: e.target.value})} value={details.confpw}/>
+                {/* <label htmlFor='confpw'> Confirm New Password: </label> */}
+                <input type="password" name = "confpw" id = "confpw" placeholder="Confirm New Password" onChange= {e => setDetails({...details, confpw: e.target.value})} value={details.confpw}/>
             </div>
             <h2></h2>
             
