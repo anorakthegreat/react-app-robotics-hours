@@ -15,12 +15,14 @@ function App() {
   const [totalTime, setTime] = useState("");
   const [status, setStatus] = useState("")
   const [forgot, setForgot] = useState(false)
+  const [resetPwState, setResetPwState] = useState({backAllowed:true, old:""});
   const [changePasswordSubmitLabel, setChangePasswordSubmitLabel] = useState("SUBMIT")
   const [showCPWSuccessLabel, setShowCPWSuccessLabel] = useState(false)
   const [signinLabel, setSigninLabel] = useState("Sign In")
 
   const Login = details => {  
     setSigninLabel("Please Wait...");
+    setError("");
 
     apiRequest(Axios.get, {type: "signin", name: details.name, pw: details.password}).then((response) => {
       setSigninLabel("Sign In")
@@ -34,6 +36,11 @@ function App() {
             token: response.data["token"],
             level: response.data["level"]
           })
+
+          if (response.data["level"] === "change_password") {
+            setResetPwState({backAllowed:false, old:details.password});
+            setForgot(true);
+          }
         } else {
           setError(response.data["error"])
         }
@@ -114,12 +121,15 @@ function App() {
   }
 
   const forgotPw = details =>{
-    apiRequest(Axios.post, {type: "changepw", oldpw: details.oldpw, newpw: details.newpw}).then((response) => {
+    let old = (details.oldpw === "" ? resetPwState.old : details.oldpw)
+    apiRequest(Axios.post, {type: "changepw", oldpw: old, newpw: details.newpw}).then((response) => {
       if(response.data["result"] === "success"){
         setError("")
         setShowCPWSuccessLabel(true)
         setForgot(false)
         setChangePasswordSubmitLabel("SUBMIT")
+        setUser({...user, level: response.data["level"]})
+        setResetPwState({backAllowed:true,old:""})
       } else {
         setChangePasswordSubmitLabel("SUBMIT")
         setError(response.data["error"])
@@ -132,6 +142,7 @@ function App() {
   const renderSwitch = (token) =>{
     if(forgot){
       return <ForgotPassword 
+          resetState={resetPwState}
           error={error} 
           setError={setError}
           forgotPw={forgotPw}

@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import AdminForm from './AdminForm'
+import ForgotPassword from './ForgotPassword'
 import MuggleForm from './MuggleForm'
 import UserForm from './UserForm'
 
