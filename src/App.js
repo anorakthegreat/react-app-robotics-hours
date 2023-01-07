@@ -84,6 +84,7 @@ function App() {
     setStatus("")
     setForgot(false)
     setUser({name: "", token : "", level: ""})
+    
   }
 
   const requestName = () => {
