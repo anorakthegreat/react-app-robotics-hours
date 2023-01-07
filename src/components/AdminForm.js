@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
-import Axios from 'axios'
-import { userAgent } from 'next/server'
+// import Axios from 'axios'
+// import { userAgent } from 'next/server'
 
 function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin, changeUserPw, label, user}) {
 
