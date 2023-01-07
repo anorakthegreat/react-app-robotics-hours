@@ -1,6 +1,8 @@
-import './App.css';
+import './App.css'
 import React, {useState} from 'react'
 import Axios from 'axios'
+import {Buffer} from 'buffer'
+import Cookies from 'universal-cookie'
 
 import LoginForm from './components/LoginForm';
 import FinalForm from './components/FinalForm';
@@ -9,6 +11,7 @@ import ForgotPassword from './components/ForgotPassword';
 import { API_ENDPOINT } from './API';
 
 function App() {
+  const cookies = new Cookies();
   const [user, setUser] = useState({name:"", token:"", level:""})
   const [error, setError] = useState("");
   const [signedIn, setSignIn] = useState("");
@@ -19,6 +22,19 @@ function App() {
   const [changePasswordSubmitLabel, setChangePasswordSubmitLabel] = useState("SUBMIT")
   const [showCPWSuccessLabel, setShowCPWSuccessLabel] = useState(false)
   const [signinLabel, setSigninLabel] = useState("Sign In")
+
+  if (user.name === "") {
+    let userCookie = cookies.get('user');
+    console.log(userCookie)
+    if (userCookie !== undefined) {
+      let userBuffer = Buffer.from(userCookie, 'base64').toString('utf8');
+      let userdata = JSON.parse(userBuffer);
+      console.log(userdata);
+      if (userdata.name !== "" && userdata.level !== "" && userdata.token !== "") {
+        setUser(userdata);
+      }
+    }
+  }
 
   const Login = details => {  
     setSigninLabel("Please Wait...");
@@ -31,15 +47,19 @@ function App() {
 
         if(response.data["name"] === details.name){
           setError("")
-          setUser({
+          let userdata = {
             name: response.data["name"],
             token: response.data["token"],
             level: response.data["level"]
-          })
+          }
+          setUser(userdata)
 
+          cookies.set('user', Buffer.from(JSON.stringify(userdata), 'utf8').toString('base64'), {path: '/'});
+          
           if (response.data["level"] === "change_password") {
             setResetPwState({backAllowed:false, old:details.password});
             setForgot(true);
+            cookies.remove('user');
           }
         } else {
           setError(response.data["error"])
@@ -57,6 +77,7 @@ function App() {
   }
 
   const signOut = () => {
+    cookies.remove('user');
     setSignIn("")
     setTime("")
     setError("")
@@ -172,6 +193,8 @@ function App() {
         />
     }
   }
+
+  console.log("hello world!")
 
   return (
     <div className="App">
