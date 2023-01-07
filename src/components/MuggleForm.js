@@ -12,6 +12,8 @@ const [details, setDetails] = useState({name: ""})
             <h2>{totalTime}</h2>
             <h2></h2>
             <button onClick={getTotalTime}> Total Time</button>
+            <h2></h2>
+            <button onClick={Logout}> Logout</button>
         </div>
     )
 
