@@ -54,7 +54,7 @@ function App() {
           }
           setUser(userdata)
 
-          cookies.set('user', Buffer.from(JSON.stringify(userdata), 'utf8').toString('base64'), {path: '/'});
+          cookies.set('user', Buffer.from(JSON.stringify(userdata), 'utf8').toString('base64'), {path: '/', sameSite: 'strict', secure:true});
           
           if (response.data["level"] === "change_password") {
             setResetPwState({backAllowed:false, old:details.password});
