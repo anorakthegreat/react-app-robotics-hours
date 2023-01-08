@@ -22,6 +22,7 @@ function App() {
   const [changePasswordSubmitLabel, setChangePasswordSubmitLabel] = useState("SUBMIT")
   const [showCPWSuccessLabel, setShowCPWSuccessLabel] = useState(false)
   const [signinLabel, setSigninLabel] = useState("Sign In")
+  const [dateVal, setDateVal] = useState("")
 
   if (user.name === "") {
     let userCookie = cookies.get('user');
@@ -109,16 +110,20 @@ function App() {
     })
   }
 
-  const getTotalTimeAdmin = name => {
+  const getTotalTimeAdmin = (name, currDate) => {
     if (name === "") name = user.name;
 
     setTime("Loading....")
 
-    apiRequest(Axios.get, {type: "totalTime", name: name}).then((response) =>{
+    apiRequest(Axios.get, {type: "totalTime", name: name, date:currDate}).then((response) =>{
       console.log(response.data["totalTime"])
 
       setTime(Math.round(response.data["totalTime"]*100)/100 + " hours")
     })
+
+    setTimeout(function(){
+      setDateVal("")
+    }.bind(this),2500);  
   }
 
   
@@ -185,6 +190,8 @@ function App() {
           status={status} 
           getTotalTimeAdmin={getTotalTimeAdmin} 
           changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
+          dateVal = {dateVal}
+          setDateVal = {setDateVal}
         /> 
     } else {
       return <LoginForm 

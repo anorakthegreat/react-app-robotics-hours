@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 // import Axios from 'axios'
 // import { userAgent } from 'next/server'
 
-function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin, changeUserPw, label, user}) {
+function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin, changeUserPw, label, user, dateVal, setDateVal}) {
 
 const [details, setDetails] = useState({name: ""})
 const [signoutLabel, setSignoutLabel] = useState("Sign Out")
@@ -17,6 +17,32 @@ const [signoutLabel, setSignoutLabel] = useState("Sign Out")
 
 
     return (
+        // <div className="gradient">
+        //     <div className = "admin gradient-inner"> 
+        //         <h1>Admin Panel</h1>
+        //         <h2 />
+        //         <h2>{status}</h2>
+        //         <h2 />
+        //         <h2>{totalTime}</h2>
+        //         <h2 />
+        //         <input type="text" name="Name" id="name" placeholder={user.name} className="textInput"/>
+        //         <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
+        //             <button style={{flex:1}} onClick={() => adminRequestName(document.getElementById("name").value)}>Log Time In/Out</button>
+        //             <span>&nbsp;&nbsp;</span>
+        //             <button style={{flex:1}} onClick={() => getTotalTimeAdmin(document.getElementById("name").value)}>Get Total Time</button>
+        //         </div>
+        //         <h2 />
+        //         <div>
+        //             <button type="button" onClick={changeUserPw}>Change Password</button>
+        //             <span style={{color:"gray"}}>&nbsp;&nbsp;&nbsp;{label ? "Success!" : ""}</span>
+        //         </div>
+        //         <h2 />
+        //         <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
+        //             <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); Logout();}}>{signoutLabel}</button>
+        //         </div>
+        //     </div>
+        // </div>
+
         <div className="gradient">
             <div className = "admin gradient-inner"> 
                 <h1>Admin Panel</h1>
@@ -29,14 +55,24 @@ const [signoutLabel, setSignoutLabel] = useState("Sign Out")
                 <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
                     <button style={{flex:1}} onClick={() => adminRequestName(document.getElementById("name").value)}>Log Time In/Out</button>
                     <span>&nbsp;&nbsp;</span>
-                    <button style={{flex:1}} onClick={() => getTotalTimeAdmin(document.getElementById("name").value)}>Get Total Time</button>
-                </div>
-                <h2 />
-                <div>
+                    {/* <button style={{flex:1}} onClick={() => getTotalTimeAdmin(document.getElementById("name").value)}>Get Total Time</button> */}
                     <button type="button" onClick={changeUserPw}>Change Password</button>
                     <span style={{color:"gray"}}>&nbsp;&nbsp;&nbsp;{label ? "Success!" : ""}</span>
                 </div>
                 <h2 />
+                <div>
+                    {/* <button type="button" onClick={changeUserPw}>Change Password</button>
+                    <span style={{color:"gray"}}>&nbsp;&nbsp;&nbsp;{label ? "Success!" : ""}</span> */}
+                </div>
+                <h2 />
+
+                <div>
+                    <input type="text" name="Name" id="date" placeholder={"2023-1-7"} className="textInput" value = {dateVal} onChange = {e => setDateVal(e.target.value)}/>
+                    <h2 />
+                    <button style={{flex:1}} onClick={() => getTotalTimeAdmin(document.getElementById("name").value, document.getElementById("date").value)}>Get Total Time</button>
+                    {/* <button style={{flex:1}} onClick={() => setDateVal("scooby dobee do im coming after you im boutta solve that mysteryy")}>Get Total Time</button> */}
+
+                </div>
                 <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
                     <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); Logout();}}>{signoutLabel}</button>
                 </div>

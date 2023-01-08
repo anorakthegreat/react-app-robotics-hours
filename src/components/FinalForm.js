@@ -3,7 +3,7 @@ import AdminForm from './AdminForm'
 import MuggleForm from './MuggleForm'
 import UserForm from './UserForm'
 
-function FinalForm( {Logout, requestName, getTotalTime, signedIn, totalTime, user, adminRequestName, status, getTotalTimeAdmin, changeUserPw, label}) {
+function FinalForm( {Logout, requestName, getTotalTime, signedIn, totalTime, user, adminRequestName, status, getTotalTimeAdmin, changeUserPw, label, dateVal, setDateVal}) {
 
     if(user.level === "user"){
         return(          
@@ -13,7 +13,7 @@ function FinalForm( {Logout, requestName, getTotalTime, signedIn, totalTime, use
 
     if(user.level === "admin"){
         return(
-            <AdminForm Logout={Logout} adminRequestName={adminRequestName} status = {status} totalTime = {totalTime} getTotalTimeAdmin={getTotalTimeAdmin} changeUserPw={changeUserPw} label={label} user={user}/>
+            <AdminForm Logout={Logout} adminRequestName={adminRequestName} status = {status} totalTime = {totalTime} getTotalTimeAdmin={getTotalTimeAdmin} changeUserPw={changeUserPw} label={label} user={user} dateVal = {dateVal} setDateVal = {setDateVal}/>
         )
     }
 
