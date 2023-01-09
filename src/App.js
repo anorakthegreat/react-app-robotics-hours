@@ -7,6 +7,7 @@ import Cookies from 'universal-cookie'
 import LoginForm from './components/LoginForm';
 import FinalForm from './components/FinalForm';
 import ForgotPassword from './components/ForgotPassword';
+import CollectionView from './components/CollectionView';
 
 import { API_ENDPOINT } from './API';
 
@@ -23,10 +24,11 @@ function App() {
   const [showCPWSuccessLabel, setShowCPWSuccessLabel] = useState(false)
   const [signinLabel, setSigninLabel] = useState("Sign In")
   const [dateVal, setDateVal] = useState("")
+  const [collectLabel, setCollectLabel] = useState("Collect All Student Data");
+  const [collection, setCollection] = useState({show:false, data:{}, start:'all time', end:'present'})
 
   if (user.name === "") {
     let userCookie = cookies.get('user');
-    console.log(userCookie)
     if (userCookie !== undefined) {
       let userBuffer = Buffer.from(userCookie, 'base64').toString('utf8');
       let userdata = JSON.parse(userBuffer);
@@ -85,7 +87,7 @@ function App() {
     setStatus("")
     setForgot(false)
     setUser({name: "", token : "", level: ""})
-    
+    setCollection({show:false, data:{}, start:'all time', end:'present'})
   }
 
   const requestName = () => {
@@ -120,13 +122,25 @@ function App() {
 
       setTime(Math.round(response.data["totalTime"]*100)/100 + " hours")
     })
-
-    setTimeout(function(){
-      setDateVal("")
-    }.bind(this),2500);  
   }
 
-  
+  const collectData = (startDate, endDate) => {
+    let date = new Date(Date.now());
+    let today = date.toISOString().substring(0, 10);
+
+    let start = startDate ? startDate : today;
+    let end = endDate ? endDate : today;
+
+    apiRequest(Axios.get, {type: "collect", startDate: start, endDate: end}).then((response) =>{
+      console.log(response.data);
+      setCollectLabel("Collect All Student Data")
+
+      if (response.data["data"]) {
+        setCollection({...collection, show: true, data: response.data["data"], start: startDate ? startDate : 'all time', end: endDate ? endDate : 'present'})
+      }
+    })
+  }
+
   const apiRequest = (http, params) => {
     let query = "?"
 
@@ -140,7 +154,7 @@ function App() {
     }
 
     return http(API_ENDPOINT + query).then((response) => {
-      if (response.data["error"] == "Not Authorized") {
+      if (response.data["error"] === "Not Authorized") {
         signOut();
       }
       return response;
@@ -177,6 +191,11 @@ function App() {
           submitLabel={changePasswordSubmitLabel}
           setSubmitLabel={setChangePasswordSubmitLabel}
         />
+    } else if (collection.show) {
+      return <CollectionView
+          collection={collection}
+          back={() => setCollection({...collection, show:false})}
+        />
     } else if(token !== ""){
       return <FinalForm 
           Logout={Logout} 
@@ -192,6 +211,11 @@ function App() {
           changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
           dateVal = {dateVal}
           setDateVal = {setDateVal}
+          collectData={collectData}
+          showCollect={() => setCollection({...collection, show:true})}
+          collectLabel={collectLabel}
+          setCollectLabel={setCollectLabel}
+          collection={collection}
         /> 
     } else {
       return <LoginForm 
@@ -201,8 +225,6 @@ function App() {
         />
     }
   }
-
-  console.log("hello world!")
 
   return (
     <div className="App">

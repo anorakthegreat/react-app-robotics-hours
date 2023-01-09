@@ -1,4 +1,3 @@
-import userEvent from '@testing-library/user-event';
 import React, {useState} from 'react'
 
 
@@ -21,7 +20,7 @@ function ForgotPassword( {error, setError, forgotPw, back, submitLabel, setSubmi
         <div className = "form-inner cpw-form">
             {resetState.backAllowed ?
                 <>
-                    <button type="reset" onClick={back}>
+                    <button className="secondary-button" style={{padding:'0.6em 1em'}} type="reset" onClick={back}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="3 2 10 10">
                             <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
                         </svg>
@@ -31,7 +30,7 @@ function ForgotPassword( {error, setError, forgotPw, back, submitLabel, setSubmi
             :<></>}
             <h2>{resetState.old === "" ? "Forgot Password" : "Create New Password"}</h2>
 
-            { (error != "") ? (<div className=' error'><h4>{error}</h4></div> ) : "" }
+            { (error !== "") ? (<div className=' error'><h4>{error}</h4></div> ) : "" }
             <h2 />
             {resetState.old === "" ?
                 <div className='form-group'>
