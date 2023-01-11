@@ -4,8 +4,10 @@ import Axios from 'axios'
 import {Buffer} from 'buffer'
 import Cookies from 'universal-cookie'
 
-import LoginForm from './components/LoginForm';
-import FinalForm from './components/FinalForm';
+import SigninForm from './components/SigninForm';
+import AdminForm from './components/AdminForm';
+import UserForm from './components/UserForm';
+import MuggleForm from './components/MuggleForm';
 import ForgotPassword from './components/ForgotPassword';
 import CollectionView from './components/CollectionView';
 
@@ -15,14 +17,12 @@ function App() {
   const cookies = new Cookies();
   const [user, setUser] = useState({name:"", token:"", level:""})
   const [error, setError] = useState("");
-  const [signedIn, setSignIn] = useState("");
   const [totalTime, setTime] = useState("");
   const [status, setStatus] = useState("")
   const [forgot, setForgot] = useState(false)
   const [resetPwState, setResetPwState] = useState({backAllowed:true, old:""});
   const [changePasswordSubmitLabel, setChangePasswordSubmitLabel] = useState("SUBMIT")
   const [showCPWSuccessLabel, setShowCPWSuccessLabel] = useState(false)
-  const [signinLabel, setSigninLabel] = useState("Sign In")
   const [dateVal, setDateVal] = useState("")
   const [collectLabel, setCollectLabel] = useState("Collect All Student Data");
   const [collection, setCollection] = useState({show:false, data:{}, start:'all time', end:'present'})
@@ -39,87 +39,36 @@ function App() {
     }
   }
 
-  const Login = details => {  
-    setSigninLabel("Please Wait...");
-    setError("");
-
-    apiRequest(Axios.get, {type: "signin", name: details.name, pw: details.password}).then((response) => {
-      setSigninLabel("Sign In")
-      if(response.data !== false){
-        console.log(response.data)
-
-        if(response.data["name"] === details.name){
-          setError("")
-          let userdata = {
-            name: response.data["name"],
-            token: response.data["token"],
-            level: response.data["level"]
-          }
-          setUser(userdata)
-
-          cookies.set('user', Buffer.from(JSON.stringify(userdata), 'utf8').toString('base64'), {path: '/', sameSite: 'strict', secure:true});
-          
-          if (response.data["level"] === "change_password") {
-            setResetPwState({backAllowed:false, old:details.password});
-            setForgot(true);
-            cookies.remove('user');
-          }
-        } else {
-          setError(response.data["error"])
-        }
-      } else {
-        setError("API Error")
-      }
-    })
+  const onSignin = (userdata, pw) => {
+    setUser(userdata)
+    
+    cookies.set('user', Buffer.from(JSON.stringify(userdata), 'utf8').toString('base64'), {path: '/', sameSite: 'strict', secure:true});
+    
+    if (userdata.level === "change_password") {
+      setResetPwState({backAllowed:false, old:pw});
+      setForgot(true);
+      cookies.remove('user');
+    }
   }
-
-  const Logout = () => {
+  
+  const onSignout = () => {
     apiRequest(Axios.get, {type: "signout", name: user.name}).then((response) => {
-      signOut();
-    })    
-  }
-
-  const signOut = () => {
-    cookies.remove('user');
-    setSignIn("")
-    setTime("")
-    setError("")
-    setStatus("")
-    setForgot(false)
-    setUser({name: "", token : "", level: ""})
-    setCollection({show:false, data:{}, start:'all time', end:'present'})
-  }
-
-  const requestName = () => {
-    setSignIn("Logging activity...")
-    apiRequest(Axios.post, {type: "logname", name: user.name}).then((response) =>{
-      if (response.data["status"] === null) setSignIn("Error: " + response.data["error"])
-      else setSignIn("You've logged " + response.data["status"] + "!")
+      cookies.remove('user');
+      setTime("")
+      setError("")
+      setStatus("")
+      setForgot(false)
+      setUser({name: "", token : "", level: ""})
+      setCollection({show:false, data:{}, start:'all time', end:'present'})
     })
   }
 
   const getTotalTime = () => {
-    getTotalTimeAdmin(user.name);
-  }
-
-  const adminRequestName = name => {
-    if (name === "") name = user.name;
-
-    setStatus("Loading...")
-    apiRequest(Axios.post, {type: "logname", name: name}).then((response) => {
-      if (response.data["status"] === undefined) setStatus("Error: " + response.data["error"])
-      else setStatus("You've logged " + name + " " + response.data["status"] + "!")
-    })
-  }
-
-  const getTotalTimeAdmin = (name, currDate) => {
-    if (name === "") name = user.name;
-
     setTime("Loading....")
-
-    apiRequest(Axios.get, {type: "totalTime", name: name, date:currDate}).then((response) =>{
+    
+    apiRequest(Axios.get, {type: "totalTime", name:user.name}).then((response) =>{
       console.log(response.data["totalTime"])
-
+  
       setTime(Math.round(response.data["totalTime"]*100)/100 + " hours")
     })
   }
@@ -155,7 +104,9 @@ function App() {
 
     return http(API_ENDPOINT + query).then((response) => {
       if (response.data["error"] === "Not Authorized") {
-        signOut();
+        apiRequest(Axios.get, {type: "signout", name: user.name}).then((response) => {
+          onSignout();
+        })
       }
       return response;
     })
@@ -197,32 +148,57 @@ function App() {
           back={() => setCollection({...collection, show:false})}
         />
     } else if(token !== ""){
-      return <FinalForm 
-          Logout={Logout} 
-          requestName={requestName} 
-          getTotalTime={getTotalTime} 
-          signedIn={signedIn} 
-          totalTime={totalTime} 
-          user={user} 
-          label={showCPWSuccessLabel}
-          adminRequestName={adminRequestName} 
-          status={status} 
-          getTotalTimeAdmin={getTotalTimeAdmin} 
-          changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
-          dateVal = {dateVal}
-          setDateVal = {setDateVal}
-          collectData={collectData}
-          showCollect={() => setCollection({...collection, show:true})}
-          collectLabel={collectLabel}
-          setCollectLabel={setCollectLabel}
-          collection={collection}
-        /> 
+      if(user.level === "user"){
+        return(          
+            <UserForm
+            apiRequest={apiRequest}
+            onSignout={onSignout}
+            getTotalTime={getTotalTime}
+            totalTime={totalTime}
+            user={user}
+            changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
+            label={showCPWSuccessLabel}
+            />
+        )
+    } else if(user.level === "admin"){
+        return(
+            <AdminForm
+            apiRequest={apiRequest}
+            onSignout={onSignout}
+            status={status}
+            totalTime={totalTime}
+            changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
+            label={showCPWSuccessLabel}
+            user={user}
+            dateVal={dateVal}
+            setDateVal={setDateVal}
+            collectData={collectData}
+            collectLabel={collectLabel}
+            setCollectLabel={setCollectLabel}
+            showCollect={() => setCollection({...collection, show:true})}
+            collection={collection}
+            />
+        )
+    } else if(user.level === "limited"){
+        return(
+            <MuggleForm
+            apiRequest={apiRequest}
+            onSignout={onSignout}
+            totalTime={totalTime}
+            getTotalTime={getTotalTime}
+            user={user}
+            changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
+            label={showCPWSuccessLabel}
+            />
+        )
+    }
     } else {
-      return <LoginForm 
-          Login={Login} 
-          error={error}
-          signinLabel={signinLabel}
+      return (
+        <SigninForm
+          apiRequest={apiRequest}
+          onSignin={onSignin}
         />
+      )
     }
   }
 

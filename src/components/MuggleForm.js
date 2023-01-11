@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import Axios from 'axios'
 
-function MuggleForm( {Logout, totalTime, getTotalTime, user, changeUserPw, label}) {
+function MuggleForm( {onSignout, totalTime, getTotalTime, user, changeUserPw, label}) {
 
-const [details, setDetails] = useState({name: ""})
-const [signoutLabel, setSignoutLabel] = useState("Sign Out")
+    const [details, setDetails] = useState({name: ""})
+    const [signoutLabel, setSignoutLabel] = useState("Sign Out")
 
     return (
         <div className="gradient">
@@ -19,13 +19,11 @@ const [signoutLabel, setSignoutLabel] = useState("Sign Out")
                 </div>
                 <h2 />
                 <div style={{marginTop:'0.5em', display:'flex', flexDirection:'row'}}>
-                    <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); Logout();}}>{signoutLabel}</button>
+                    <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); onSignout();}}>{signoutLabel}</button>
                 </div>
             </div>
         </div>
     )
-
-
 }
 
 export default MuggleForm

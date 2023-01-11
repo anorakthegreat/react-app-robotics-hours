@@ -1,16 +1,42 @@
-import userEvent from '@testing-library/user-event';
 import React, {useState} from 'react'
+import Axios from 'axios';
 
 
-function LoginForm( {Login, error, signinLabel}) {
+function SigninForm( {apiRequest, onSignin}) {
     const [details, setDetails] = useState({name: "", password: ""})
+    const [signinLabel, setSigninLabel] = useState("Sign In")
+    const [error, setError] = useState("")
 
     const submitHandler = e =>{
         e.preventDefault();
-        
-        // console.log("YOOOOOOOOOOOOOOOOOOO")
-        Login(details)
+        login(details)
     }
+
+    const login = details => {  
+        setSigninLabel("Please Wait...");
+        setError("");
+    
+        apiRequest(Axios.get, {type: "signin", name: details.name, pw: details.password}).then((response) => {
+          setSigninLabel("Sign In")
+          if(response.data !== false){
+            console.log(response.data)
+    
+            if(response.data["name"] === details.name){
+              setError("")
+              let userdata = {
+                name: response.data["name"],
+                token: response.data["token"],
+                level: response.data["level"]
+              }
+              onSignin(userdata, details.password);
+            } else {
+              setError(response.data["error"])
+            }
+          } else {
+            setError("API Error")
+          }
+        })
+      }
 
   return (
     <form onSubmit = {submitHandler}>
@@ -36,4 +62,4 @@ function LoginForm( {Login, error, signinLabel}) {
   )
 }
 
-export default LoginForm
+export default SigninForm

@@ -1,14 +1,12 @@
 import React, {useState} from 'react'
+import Axios from 'axios';
 
-function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAdmin, changeUserPw, label, user, collectData, showCollect, collectLabel, setCollectLabel, collection}) {
+function AdminForm( {onSignout, changeUserPw, label, user, collectData, showCollect, collectLabel, setCollectLabel, collection, apiRequest}) {
     const [signoutLabel, setSignoutLabel] = useState("Sign Out")
+    const [status, setStatus] = useState("")
+    const [totalTime, setTime] = useState("");
 
     const placeholderDate = "2023-01-07"
-
-    const getTotalTime = (name, date) => {
-        if (date === "") date = placeholderDate;
-        getTotalTimeAdmin(name, date);
-    }
 
     const collectButton = (start, end) => {
         setCollectLabel("Please Wait...")
@@ -17,10 +15,40 @@ function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAd
         collectData(start, end)
     }
 
-    const addTag = (name, uid) => {
-        if (name === "") {
+    const logName = name => {
+        if (name === "") name = user.name;
+    
+        setStatus("Loading...")
+        apiRequest(Axios.post, {type: "logname", name: name}).then((response) => {
+            if (response.data["status"] === undefined) setStatus("Error: " + response.data["error"])
+            else setStatus("You've logged " + name + " " + response.data["status"] + "!")
+        })
+    }
 
+    const addTag = (name, uid, self) => {
+        if (name !== "" && uid !== "") {
+            self.value = "Please Wait...";
+            apiRequest(Axios.get, {type: "adduid", name, uid}).then((response) =>{
+                if (response.data["status"] === "success") {
+                    self.value = "Register NFC Tag";
+                } else {
+
+                }
+            })
         }
+    }
+
+    const getTotalTime = (name, date) => {
+        if (name === "") name = user.name;
+        if (date === "") date = placeholderDate;
+    
+        setTime("Loading....")
+    
+        apiRequest(Axios.get, {type: "totalTime", name, date}).then((response) =>{
+            console.log(response.data["totalTime"])
+        
+            setTime(Math.round(response.data["totalTime"]*100)/100 + " hours")
+        })
     }
 
     return (
@@ -37,7 +65,7 @@ function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAd
                         <input style={{flex:1}} type="text" name="Time" id="date" placeholder="Time (Optional)" className="textInput"/>
                     </div>
                     <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
-                        <button style={{flex:1}} onClick={() => adminRequestName(document.getElementById("name").value)}>Log Time In/Out</button>
+                        <button style={{flex:1}} onClick={() => logName(document.getElementById("name").value)}>Log Time In/Out</button>
                     </div>
                 </div>
                 <h2 />
@@ -92,7 +120,7 @@ function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAd
                 </div>
                 <h2 />
                 <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
-                    <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); Logout();}}>{signoutLabel}</button>
+                    <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); onSignout();}}>{signoutLabel}</button>
                 </div>
             </div>
         </div>
