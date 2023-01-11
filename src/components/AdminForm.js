@@ -17,30 +17,48 @@ function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAd
         collectData(start, end)
     }
 
+    const addTag = (name, uid) => {
+        if (name === "") {
+
+        }
+    }
+
     return (
         <div className="gradient">
             <div className = "admin gradient-inner"> 
                 <h1>Admin Panel</h1>
                 <h2>{status}</h2>
                 <h2>{totalTime}</h2>
+                <p style={{color:'gray',fontWeight:'bold',marginBottom:'0.25em'}}>Log Activity</p>
                 <div style={{border: '2px solid lightgray', margin:'-0.5em',padding:'0.5em',marginTop:'0',borderRadius:'8px'}}>
                     <div style={{display:'flex',flexDirection:'row'}}>
-                        <input style={{flex:3.25}} type="text" name="Name" id="name" placeholder={user.name} className="textInput"/>
+                        <input style={{flex:2}} type="text" name="Name" id="name" placeholder={user.name} className="textInput"/>
                         <span>&nbsp;&nbsp;</span>
-                        <input style={{flex:1}} type="text" name="Date" id="date" placeholder={placeholderDate} className="textInput"/>
+                        <input style={{flex:1}} type="text" name="Time" id="date" placeholder="Time (Optional)" className="textInput"/>
                     </div>
                     <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
                         <button style={{flex:1}} onClick={() => adminRequestName(document.getElementById("name").value)}>Log Time In/Out</button>
-                        <span>&nbsp;&nbsp;</span>
-                        <button style={{flex:1}} onClick={() => getTotalTime(document.getElementById("name").value, document.getElementById("date").value)}>Get Total Time</button>
                     </div>
                 </div>
                 <h2 />
+                <p style={{color:'gray',fontWeight:'bold',marginBottom:'0.25em'}}>Student Attendance Info</p>
                 <div style={{border: '2px solid lightgray', margin:'-0.5em',padding:'0.5em',marginTop:'0',borderRadius:'8px'}}>
+                    <div style={{marginBottom:'0.5em',display:'flex',flexDirection:'row'}}>
+                        <button className="secondary-button" style={{flex:1,backgroundColor:'#eeeeee',color:'gray',margin:'0 0.25em 0 0'}}>Kickoff</button>
+                        <button className="secondary-button" style={{flex:1,backgroundColor:'#eeeeee',color:'gray',margin:'0 0.25em'}}>Today</button>
+                        <button className="secondary-button" style={{flex:1,backgroundColor:'#eeeeee',color:'gray',margin:'0 0.25em'}}>Kickoff</button>
+                        <button className="secondary-button" style={{flex:1,backgroundColor:'#eeeeee',color:'gray',margin:'0 0 0 0.25em'}}>Today</button>
+                    </div>
                     <div style={{display:'flex',flexDirection:'row'}}>
-                        <input style={{flex:1}} type="text" name="Start" id="start" placeholder={placeholderDate} className="textInput"/>
+                        <input style={{flex:1}} type="text" name="Start" id="start" placeholder="Start Date" className="textInput"/>
                         <span>&nbsp;&nbsp;</span>
-                        <input style={{flex:1}} type="text" name="End" id="end" placeholder="End Date (Optional)" className="textInput"/>
+                        <input style={{flex:1}} type="text" name="End" id="end" placeholder="End Date" className="textInput"/>
+                    </div>
+                    <hr style={{marginTop:'0.5em', border:'1px solid lightgray'}} />
+                    <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
+                        <input style={{flex:1}} type="text" name="NameTime" id="nametime" placeholder="Student Name (Optional)" className="textInput"/>
+                        <span>&nbsp;&nbsp;</span>
+                        <button style={{flex:1}} onClick={() => getTotalTime(document.getElementById("name").value, document.getElementById("date").value)}>Get Hours</button>
                     </div>
                     <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
                         <button style={{flex:1}} className={Object.keys(collection.data).length !== 0 ? "secondary-button" : ""} onClick={() => collectButton(document.getElementById("start").value, document.getElementById("end").value)}>{collectLabel}</button>
@@ -52,6 +70,18 @@ function AdminForm( {Logout, adminRequestName, status, totalTime, getTotalTimeAd
                                 </svg>
                             </button>
                         </> : <></>}
+                    </div>
+                </div>
+                <h2 />
+                <p style={{color:'gray',fontWeight:'bold',marginBottom:'0.25em'}}>Register NFC Tag</p>
+                <div style={{border: '2px solid lightgray', margin:'-0.5em',padding:'0.5em',marginTop:'0',borderRadius:'8px'}}>
+                    <div style={{display:'flex',flexDirection:'row'}}>
+                        <input style={{flex:1}} type="text" name="Nametag" id="nametag" placeholder="Student Name" className="textInput"/>
+                        <span>&nbsp;&nbsp;</span>
+                        <input style={{flex:1}} type="text" name="UID" id="uid" placeholder="NFC Tag UID" className="textInput"/>
+                    </div>
+                    <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
+                        <button style={{flex:1}} onClick={() => addTag(document.getElementById("nametag").value, document.getElementById("uid").value)}>Register NFC Tag</button>
                     </div>
                 </div>
                 <h2 />
