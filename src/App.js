@@ -24,7 +24,6 @@ function App() {
   const [changePasswordSubmitLabel, setChangePasswordSubmitLabel] = useState("SUBMIT")
   const [showCPWSuccessLabel, setShowCPWSuccessLabel] = useState(false)
   const [dateVal, setDateVal] = useState("")
-  const [collectLabel, setCollectLabel] = useState("Collect All Student Data");
   const [collection, setCollection] = useState({show:false, data:{}, start:'all time', end:'present'})
 
   if (user.name === "") {
@@ -72,22 +71,24 @@ function App() {
       setTime(Math.round(response.data["totalTime"]*100)/100 + " hours")
     })
   }
-
-  const collectData = (startDate, endDate) => {
-    let date = new Date(Date.now());
-    let today = date.toISOString().substring(0, 10);
-
-    let start = startDate ? startDate : today;
-    let end = endDate ? endDate : today;
-
-    apiRequest(Axios.get, {type: "collect", startDate: start, endDate: end}).then((response) =>{
-      console.log(response.data);
-      setCollectLabel("Collect All Student Data")
-
-      if (response.data["data"]) {
-        setCollection({...collection, show: true, data: response.data["data"], start: startDate ? startDate : 'all time', end: endDate ? endDate : 'present'})
-      }
+  
+  const forgotPw = details =>{
+    let old = (details.oldpw === "" ? resetPwState.old : details.oldpw)
+    apiRequest(Axios.post, {type: "changepw", oldpw: old, newpw: details.newpw}).then((response) => {
+        if(response.data["result"] === "success"){
+            setError("")
+            setShowCPWSuccessLabel(resetPwState.backAllowed)
+            setForgot(false)
+            setChangePasswordSubmitLabel("SUBMIT")
+            setUser({...user, level: response.data["level"]})
+            setResetPwState({backAllowed:true,old:""})
+        } else {
+            setChangePasswordSubmitLabel("SUBMIT")
+            setError(response.data["error"])
+        }
     })
+
+    console.log("Submitted")
   }
 
   const apiRequest = (http, params) => {
@@ -110,25 +111,6 @@ function App() {
       }
       return response;
     })
-  }
-
-  const forgotPw = details =>{
-    let old = (details.oldpw === "" ? resetPwState.old : details.oldpw)
-    apiRequest(Axios.post, {type: "changepw", oldpw: old, newpw: details.newpw}).then((response) => {
-      if(response.data["result"] === "success"){
-        setError("")
-        setShowCPWSuccessLabel(resetPwState.backAllowed)
-        setForgot(false)
-        setChangePasswordSubmitLabel("SUBMIT")
-        setUser({...user, level: response.data["level"]})
-        setResetPwState({backAllowed:true,old:""})
-      } else {
-        setChangePasswordSubmitLabel("SUBMIT")
-        setError(response.data["error"])
-      }
-    })
-
-    console.log("Submitted")
   }
   
   const renderSwitch = (token) =>{
@@ -153,7 +135,9 @@ function App() {
             <UserForm
             apiRequest={apiRequest}
             onSignout={onSignout}
-            getTotalTime={getTotalTime}
+            setTime={setTime}
+            collection={collection}
+            setCollection={setCollection}
             totalTime={totalTime}
             user={user}
             changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
@@ -165,18 +149,19 @@ function App() {
             <AdminForm
             apiRequest={apiRequest}
             onSignout={onSignout}
-            status={status}
-            totalTime={totalTime}
-            changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
-            label={showCPWSuccessLabel}
-            user={user}
-            dateVal={dateVal}
-            setDateVal={setDateVal}
-            collectData={collectData}
-            collectLabel={collectLabel}
-            setCollectLabel={setCollectLabel}
-            showCollect={() => setCollection({...collection, show:true})}
             collection={collection}
+            setCollection={setCollection}
+            user={user}
+            showCPWSuccessLabel={showCPWSuccessLabel}
+            changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
+            // status={status}
+            // totalTime={totalTime}
+            // changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
+            // label={showCPWSuccessLabel}
+            // dateVal={dateVal}
+            // setDateVal={setDateVal}
+            // collectLabel={collectLabel}
+            // setCollectLabel={setCollectLabel}
             />
         )
     } else if(user.level === "limited"){
@@ -185,7 +170,7 @@ function App() {
             apiRequest={apiRequest}
             onSignout={onSignout}
             totalTime={totalTime}
-            getTotalTime={getTotalTime}
+            setTime={setTime}
             user={user}
             changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
             label={showCPWSuccessLabel}
