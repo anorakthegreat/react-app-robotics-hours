@@ -2,15 +2,20 @@ import React, {useState} from 'react'
 import Axios from 'axios';
 import ChangePasswordButtonComponent from './ChangePasswordButtonComponent';
 
-function AdminForm( {apiRequest, onSignout, collection, setCollection, user, changeUserPw, showCPWSuccessLabel /*, label, collectLabel, setCollectLabel*/}) {
+function AdminForm( {apiRequest, onSignout, collection, setCollection, user, changeUserPw, showCPWSuccessLabel, setLeaderboard/*, label, collectLabel, setCollectLabel*/}) {
     const [signoutLabel, setSignoutLabel] = useState("Sign Out")
     const [status, setStatus] = useState("")
     const [totalTime, setTime] = useState("");
     const [collectLabel, setCollectLabel] = useState("Collect All Student Data");
     const [startDate, setStartDate] = useState("2023-01-07");
     const [name, setName] = useState(user.name);
+    
 
     const placeholderDate = "2023-01-07"
+    
+    const goToLeaderboard = () => {
+        setLeaderboard("true")
+    }
 
     const collectButton = (startDate, endDate) => {
         setCollectLabel("Please Wait...")
@@ -151,12 +156,24 @@ function AdminForm( {apiRequest, onSignout, collection, setCollection, user, cha
                         <button style={{flex:1}} onClick={(e) => addTag(document.getElementById("nametag").value, document.getElementById("uid").value, e.target)}>Register NFC Tag</button>
                     </div>
                 </div>
+
                 <h2 />
                 <ChangePasswordButtonComponent onClick={changeUserPw} requestLabel={showCPWSuccessLabel}/>
-                <h2 />
-                <div style={{marginTop:'0.5em',display:'flex',flexDirection:'row'}}>
+                <h3 style={{marginBottom:'0.5em'}}/>
+                <button style={{flex:1}} className="secondary-button" type="button" onClick={goToLeaderboard}>Weekly Leaderboard</button>  
+                <h3 style={{marginBottom:'0.5em'}}/>
+
+                <div  style={{marginTop:'0 em', display:'flex',flexDirection:'row'}}>
                     <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); onSignout();}}>{signoutLabel}</button>
                 </div>
+                <h2 />
+
+                
+                <h3 style={{marginBottom:'0.5em'}}/>
+
+
+                
+               
             </div>
         </div>
     )

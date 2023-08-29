@@ -12,6 +12,7 @@ import ForgotPassword from './components/ForgotPassword';
 import CollectionView from './components/CollectionView';
 
 import { API_ENDPOINT } from './API';
+import Top5 from './components/Top5'
 
 function App() {
   const cookies = new Cookies();
@@ -25,6 +26,11 @@ function App() {
   const [showCPWSuccessLabel, setShowCPWSuccessLabel] = useState(false)
   const [dateVal, setDateVal] = useState("")
   const [collection, setCollection] = useState({show:false, data:{}, start:'all time', end:'present'})
+  const[top5, setTop5] = useState([{name:"", hours:"", dates:""}]);
+  const[leaderboard, setLeaderboard] = useState("")
+  // const[top5, setTop5] = useState("");
+
+  // const [data, setData] = useState([])
 
   if (user.name === "") {
     let userCookie = cookies.get('user');
@@ -61,6 +67,8 @@ function App() {
       setCollection({show:false, data:{}, start:'all time', end:'present'})
     })
   }
+
+  
 
   const getTotalTime = () => {
     setTime("Loading....")
@@ -114,7 +122,10 @@ function App() {
   }
   
   const renderSwitch = (token) =>{
-    if(forgot){
+
+    if(leaderboard == "true"){
+      return <Top5 top5 = {top5} setTop5 = {setTop5} apiRequest={apiRequest} setLeaderboard = {setLeaderboard}/>
+    } else if(forgot){
       return <ForgotPassword 
           resetState={resetPwState}
           error={error} 
@@ -142,6 +153,7 @@ function App() {
             user={user}
             changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
             label={showCPWSuccessLabel}
+            setLeaderboard = {setLeaderboard}
             />
         )
     } else if(user.level === "admin"){
@@ -154,6 +166,7 @@ function App() {
             user={user}
             showCPWSuccessLabel={showCPWSuccessLabel}
             changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
+            setLeaderboard = {setLeaderboard}
             // status={status}
             // totalTime={totalTime}
             // changeUserPw={() => {setForgot(true); setShowCPWSuccessLabel(false);}}
@@ -178,18 +191,26 @@ function App() {
         )
     }
     } else {
-      return (
-        <SigninForm
-          apiRequest={apiRequest}
-          onSignin={onSignin}
-        />
-      )
+
+      if(leaderboard === "true"){
+        return <Top5 top5 = {top5} setTop5 = {setTop5} apiRequest={apiRequest} setLeaderboard = {setLeaderboard}/>
+      } else {
+        return (
+          <SigninForm
+            apiRequest={apiRequest}
+            onSignin={onSignin}
+            setLeaderboard = {setLeaderboard}
+          />
+        )
+      }
+      
     }
   }
 
   return (
     <div className="App">
       {renderSwitch(user.token)}      
+      {/* <Top5 top5 = {top5} setTop5 = {setTop5} apiRequest={apiRequest}/> */}
     </div>
   );
 }

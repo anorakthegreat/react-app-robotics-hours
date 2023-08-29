@@ -42,6 +42,11 @@ form:after{
   background-image: linear-gradient(to bottom right, #FF944d, #FF6600);
 }
 
+.leaderboard {
+  /* margin: 0px; */
+  border: 2px solid #00A4BD;
+}
+
 form .form-inner{
   position: relative;
   display: block;
@@ -98,6 +103,18 @@ form .form-inner h2{
   font-size: 28px;
   font-weight: 500;
   margin-bottom: 30px;
+}
+
+.red-text{
+  color: #51b939;
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+h3 .smallText{
+  /* font-size: 50px; */
+  color: #16ba7e;
 }
 
 form .form-inner .form-group{
@@ -215,6 +232,14 @@ form .form-inner input[type = "button"]:hover{
   margin-bottom: 30px;
 }
 
+.admin h3{
+  color: #e65c00;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
 .admin input{
   display: block;
   width: 100%;
@@ -265,6 +290,23 @@ form .form-inner input[type = "button"]:hover{
   color: #FFF;
   font-weight: 700;
   cursor: pointer;
+}
+
+.top5 button {
+  width:50px;
+  height:40px; 
+  /* text-align: center; */
+
+}
+
+.top5 h3{
+  color:#f16202;
+  font-size: 15px;
+}
+
+.top5 h2{
+  color:#f16202;
+  text-align: center;
 }
 
 .form-inner button:hover {

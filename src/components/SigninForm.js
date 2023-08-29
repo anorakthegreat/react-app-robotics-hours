@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Axios from 'axios';
 
-function SigninForm( {apiRequest, onSignin}) {
+function SigninForm( {apiRequest, onSignin, setLeaderboard}) {
     const [details, setDetails] = useState({name: "", password: ""})
     const [signinLabel, setSigninLabel] = useState("Sign In")
     const [error, setError] = useState("")
@@ -9,6 +9,10 @@ function SigninForm( {apiRequest, onSignin}) {
     const submitHandler = e =>{
         e.preventDefault();
         login(details)
+    }
+
+    const goToLeaderboard = () => {
+      setLeaderboard("true")
     }
 
     const login = details => {  
@@ -42,7 +46,13 @@ function SigninForm( {apiRequest, onSignin}) {
         <div className = "form-inner">
             <h2>Team 100 Hours</h2>
             { (error !== "") ? (<div className=' error'><h4>{error}</h4></div> ) : "" }
+
+              <button className="secondary-button" style={{padding:'0.6em 1em'}} type="reset" onClick={goToLeaderboard} >
+                Weekly Leaderboard
+              </button>
+              
             <h2 />
+            
             <div className='form-group'>
                 {/* <label htmlFor='name'> Name: </label> */}
                 <input type="text" name = "Name" id = "name" onChange= {e => setDetails({...details, name: e.target.value})} value={details.name} placeholder="Name"/>

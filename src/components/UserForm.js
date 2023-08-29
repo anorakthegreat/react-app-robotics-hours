@@ -3,7 +3,7 @@ import Axios from 'axios'
 
 import ChangePasswordButtonComponent from './ChangePasswordButtonComponent'
 
-function UserForm( {apiRequest, onSignout, setTime, totalTime, user, changeUserPw, label}) {
+function UserForm( {apiRequest, onSignout, setTime, totalTime, user, changeUserPw, label, setLeaderboard}) {
     const placeholderDate = "2023-01-07"
 
     const [signoutLabel, setSignoutLabel] = useState("Sign Out")
@@ -16,6 +16,10 @@ function UserForm( {apiRequest, onSignout, setTime, totalTime, user, changeUserP
             if (response.data["status"] === null) setStatus("Error: " + response.data["error"])
             else setStatus("You've logged " + response.data["status"] + "!")
         })
+    }
+
+    const goToLeaderboard = () =>{
+        setLeaderboard("true")
     }
 
     const getTotalTime = (startDate, endDate) => {
@@ -62,12 +66,25 @@ function UserForm( {apiRequest, onSignout, setTime, totalTime, user, changeUserP
                     </div>
                 </div>
                 <h2 />
+
                 {/* <div>
                     <button type="button" onClick={changeUserPw}>Change Password</button>
                     <span style={{color:"gray"}}>&nbsp;&nbsp;&nbsp;{label ? "Success!" : ""}</span>
                 </div> */}
-                <ChangePasswordButtonComponent onClick={changeUserPw} requestLabel={label}/>
-                <h2 />
+
+                <div>
+                    <ChangePasswordButtonComponent onClick={changeUserPw} requestLabel={label}/>
+                    <h2 style={{marginBottom:'0.5em'}}/>
+                    <button className="secondary-button" onClick={goToLeaderboard} >Weekly Leaderboard</button>
+                    <h2 style={{marginBottom:'0.5em'}}/>
+                    {/* <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); onSignout();}}>{signoutLabel}</button> */}
+                </div>
+                
+                
+
+                
+
+                
                 <div style={{marginTop:'0.5em', display:'flex', flexDirection:'row'}}>
                     <button style={{flex:1}} onClick={() => {setSignoutLabel("Please Wait..."); onSignout();}}>{signoutLabel}</button>
                 </div>
