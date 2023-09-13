@@ -4,7 +4,7 @@ import ChangePasswordButtonComponent from './ChangePasswordButtonComponent'
 
 function MuggleForm( {apiRequest, onSignout, totalTime, setTime, user, changeUserPw, label}) {
     const placeholderDate = "2023-01-07"
-
+    //test
     const [details, setDetails] = useState({name: ""})
     const [signoutLabel, setSignoutLabel] = useState("Sign Out")
     const [startDate, setStartDate] = useState("2023-01-07")
